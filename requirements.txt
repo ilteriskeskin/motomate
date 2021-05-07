@@ -1,0 +1,15 @@
+click==7.1.2
+dnspython==2.1.0
+email-validator==1.1.2
+Flask==1.1.2
+Flask-Login==0.5.0
+Flask-SQLAlchemy==2.5.1
+Flask-WTF==0.14.3
+greenlet==1.1.0
+idna==3.1
+itsdangerous==1.1.0
+Jinja2==2.11.3
+MarkupSafe==1.1.1
+SQLAlchemy==1.4.14
+Werkzeug==1.0.1
+WTForms==2.3.3
