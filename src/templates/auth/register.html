@@ -1,28 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
+{% block title %}
+Register
+{% endblock title %}
 
-<body>
-    <div class="form-box">
-        <form class="register" method="POST">
-            <h2 class="register">Register</h2>
-            {{ form.name(class="name", placeholder="Name") }}
-            {{ form.username(class="username", placeholder="Username") }}
-            {{ form.email(class="email", placeholder="hi@example.com") }}
-            {{ form.password(class="password", placeholder="password") }}
-            {{ form.confirm(class="confirm", placeholder="Confirm") }}
-            <div class="buttons">
-                <button class="button" type="submit">Register</button>
-                <button class="button">Log in</button>
-            </div>
+{% block body %}
+{% if session['logged_in'] %}
+<div class="alert alert-danger" role="alert">
+    You're registered in already.
+</div>
 
-        </form>
-    </div>
-</body>
-
-</html>
+{% else %}
+{% from "includes/formhelpers.html" import render_field %}
+{{ form.csrf_token }}
+<form action="/register/" method=post>
+    {{ form.name(class="form-control", placeholder="Name") }}
+    <br>
+    {{ form.username(class="form-control", placeholder="Username") }}
+    <br>
+    {{ form.email(class="form-control", placeholder="hi@example.com") }}
+    <br>
+    {{ form.password(class="form-control", placeholder="password") }}
+    <br>
+    {{ form.confirm(class="form-control", placeholder="Confirm") }}
+    <br>
+    <input type=submit value=Register>
+</form>
+{% endif %}
+{% endblock body %}

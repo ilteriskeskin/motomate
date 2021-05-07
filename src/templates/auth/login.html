@@ -1,33 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
+{% block title %}
+Register
+{% endblock title %}
 
-<body>
-    <div class="form-box">
-        <form class="login" method="POST">
-            <h2 class="login">Log in</h2>
-            <!-- <input name="username" type="text" placeholder="Username"
-                    class="username" />
-                <input name="username" type="text"
-                    placeholder="hi@example.com"
-                    class="email" />
-                <input name="password" type="password" placeholder="Password"
-                    class="password" /> -->
-            {{ form.email(class="email", placeholder="hi@example.com") }}
-            {{ form.password(class="password", placeholder="Password") }}
-            <div class="buttons">
-                <button class="button" type="submit">Log in</button>
-                <button onclick="window.location.href='/register'" class="button">Register</button>
-            </div>
-            <a class="forget-password" href="#">Forget password?</a>
+{% block body %}
+{% if session['logged_in'] %}
+<p>You're logged in already!</p>
 
-        </form>
-    </div>
-</body>
-
-</html>
+{% else %}
+<h2>Login</h2>
+{{ form.csrf_token }}
+<form action="/login/" method="POST">
+    {{ form.email(class="form-control", placeholder="hi@example.com") }}
+    <br>
+    {{ form.password(class="form-control", placeholder="Password") }}
+    <br>
+    <input type="submit" value="Login">
+</form>
+{% endif %}
+{% endblock body %}
