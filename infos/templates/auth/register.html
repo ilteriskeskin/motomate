@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Register
+{% endblock title %}
+
+{% block body %}
+{% if session['logged_in'] %}
+<div class="alert alert-danger" role="alert">
+    You're registered in already.
+</div>
+
+{% else %}
+{% from "includes/formhelpers.html" import render_field %}
+{{ form.csrf_token }}
+<form action="/register/" method=post>
+    <label for="name">Full Name</label>
+    {{ form.name(class="form-control", placeholder="Name") }}
+    <br>
+    <label for="username">Username</label>
+    {{ form.username(class="form-control", placeholder="Username") }}
+    <br>
+    <label for="email">Email</label>
+    {{ form.email(class="form-control", placeholder="hi@example.com") }}
+    <br>
+    <label for="twitter_username">Twitter Username</label>
+    {{ form.twitter_username(class="form-control", placeholder="johnandres") }}
+    <br>
+    <label for="instagram_username">Instagram Username</label>
+    {{ form.instagram_username(class="form-control", placeholder="johnandres") }}
+    <br>
+    <label for="telegram_username">Telegram Username</label>
+    {{ form.telegram_username(class="form-control", placeholder="johnandres") }}
+    <br>
+    <label for="motorcycle_brand">Motorcycle Brand</label>
+    {{ form.motorcycle_brand(class="form-control", placeholder="Yamaha Nmax 155") }}
+    <br>
+    <label for="engine_capacity">Engine Capacity</label>
+    {{ form.engine_capacity(class="form-control", placeholder="155cc") }}
+    <br>
+    <label for="password">Password</label>
+    {{ form.password(class="form-control", placeholder="password") }}
+    <br>
+    <label for="confirm">Confirm</label>
+    {{ form.confirm(class="form-control", placeholder="Confirm") }}
+    <br>
+    <input type=submit value=Register>
+</form>
+{% endif %}
+{% endblock body %}
