@@ -1,14 +1,41 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Create Tour
+Create Tour
 {% endblock title %}
 
 {% block body %}
-    <h2>Create Tour</h2>
-   <p><strong>{{ tour_detail["name"] }}</strong></p>
-   <p><strong>{{ tour_detail["email"] }}</strong></p>
-      <p><strong>{{ tour_detail["twitter_username"] }}</strong></p>
+<h2>Tour Details</h2>
+<hr>
 
+<strong>Creator: </strong>{{ tour_detail['name'] }}
+<hr>
+
+<h3>Event Infos</h3>
+<strong>Date: </strong>{{ tour_detail['tour_date'] }}
+<br>
+<strong>From City: </strong>{{ tour_detail['from_city'] }}
+<br>
+<strong>To City: </strong>{{ tour_detail['to_city'] }}
+<hr>
+
+<h3>Creator's Engine Info</h3>
+<strong>Motorcycle Brand: </strong>{{ tour_detail['motorcycle_brand'] }}
+<br>
+<strong>Engine Capacity: </strong>{{ tour_detail['engine_capacity'] }}
+<hr>
+
+<h3>Creator's Contact Info</h3>
+<strong>Email: </strong>{{ tour_detail['email'] }}
+<br>
+<strong>Twitter Username: </strong>{{ tour_detail['twitter_username'] }}
+<br>
+<strong>Instagram Username: </strong>{{ tour_detail['instagram_username'] }}
+<br>
+<strong>Telegram Username</strong>{{ tour_detail['telegram_username'] }}
+<hr>
+
+<h3>Creator's Note</h3>
+<strong>Note: </strong>{{ tour_detail['note'] }}
 
 {% endblock body %}

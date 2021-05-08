@@ -6,8 +6,8 @@ from functools import wraps
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/alperen/proje/mototourmate/src/database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/ilteriskeskin/Belgeler/mototourmate/src/database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
@@ -53,7 +53,7 @@ def home():
 
 @app.route('/tour-detail/<int:id>', methods=['GET'])
 def tour_detail(id):
-    tour_detail = User.query.filter_by(id=id).first()
+    tour_detail = TourPost.query.filter_by(id=id).first()
     return render_template('tour-detail.html', tour_detail=tour_detail)
 
 
