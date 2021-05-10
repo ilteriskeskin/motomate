@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.db.models import Manager
+from django.utils import timezone
+import uuid
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=("Created_at"))
@@ -14,7 +16,7 @@ class BaseModel(models.Model):
 
 class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField(unique=True, verbose_name=_("email address"))
+    email = models.EmailField(unique=True, verbose_name=("email address"))
     is_active = models.BooleanField(default=True, verbose_name=("active"))
     is_staff = models.BooleanField(default=False, verbose_name=("staff status"))
     date_joined = models.DateTimeField(default=timezone.now, verbose_name=("date joined"))
@@ -31,9 +33,11 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     motorcycle_brand = models.CharField(max_length=255, verbose_name=("motorcycle brand"))
     engine_capacity = models.CharField(max_length=255, verbose_name=("engine capacity"))
 
+    USERNAME_FIELD = "email"
+
     class Meta:
-        verbose_name = _("user")
-        verbose_name_plural = _("users")
+        verbose_name = ("user")
+        verbose_name_plural = ("users")
 
 
     def __str__(self):
