@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Register
+{% endblock title %}
+
+{% block body %}
+{% if session['logged_in'] %}
+<div class="alert alert-danger" role="alert">
+    You're registered in already.
+</div>
+
+{% else %}
+{% from "includes/formhelpers.html" import render_field %}
+{{ form.csrf_token }}
+<form action="/register/" method=post>
+    {{ form.name(class="form-control", placeholder="Name") }}
+    <br>
+    {{ form.username(class="form-control", placeholder="Username") }}
+    <br>
+    {{ form.email(class="form-control", placeholder="hi@example.com") }}
+    <br>
+    {{ form.password(class="form-control", placeholder="password") }}
+    <br>
+    {{ form.confirm(class="form-control", placeholder="Confirm") }}
+    <br>
+    <input type=submit value=Register>
+</form>
+{% endif %}
+{% endblock body %}

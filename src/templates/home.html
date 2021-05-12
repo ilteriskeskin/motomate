@@ -26,6 +26,8 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
                 <th scope="col">From</th>
                 <th scope="col">To</th>
                 <th scope="col">Date</th>
@@ -36,6 +38,8 @@
             <a href="/tour-detail/{{ tour.id }}/">
                 <tr onclick="window.location='/tour-detail/{{ tour.id }}'" style="cursor: pointer;">
                     <td>{{ tour.id }}</td>
+                    <td>{{ tour.name }}</td>
+                    <td>{{ tour.email }}</td>
                     <td>{{ tour.from_city }}</td>
                     <td>{{ tour.to_city }}</td>
                     <td>{{ tour.tour_date }}</td>
