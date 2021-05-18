@@ -28,9 +28,11 @@ Create Tour
 <h3>Creator's Contact Info</h3>
 <strong>Email: </strong>{{ tour_detail['email'] }}
 <br>
-<strong>Twitter Username: </strong>{{ tour_detail['twitter_username'] }}
+<strong>Twitter Username: </strong><a href="https://twitter.com/{{ tour_detail['twitter_username'] }}" target="_blank">{{
+    tour_detail['twitter_username'] }}</a>
 <br>
-<strong>Instagram Username: </strong>{{ tour_detail['instagram_username'] }}
+<strong>Instagram Username: </strong><a href="https://instagram.com/{{ tour_detail['instagram_username'] }}"
+                                        target="_blank">{{ tour_detail['instagram_username'] }}</a>
 <br>
 <strong>Telegram Username</strong>{{ tour_detail['telegram_username'] }}
 <hr>
@@ -38,4 +40,17 @@ Create Tour
 <h3>Creator's Note</h3>
 <strong>Note: </strong>{{ tour_detail['note'] }}
 
+<br><br><br><br>
+<form action="/join-tour/{{ tour_detail['_id'] }}" method="POST">
+    <div class="text-center">
+        <input class="btn btn-primary" type="submit" value="Join Tour">
+    </div>
+</form>
+
+<hr>
+
+<h3>Joined User</h3>
+{% for subs in tour_detail['subscriber'] %}
+    <li>{{ subs }}</li>
+{% endfor %}
 {% endblock body %}

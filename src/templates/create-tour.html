@@ -7,12 +7,6 @@
 {% block body %}
     <h2>Create Tour</h2>
     <form action="/create-tour/" method="POST">
-        <label for="name">Full Name</label>
-        {{ form.name(class="form-control", placeholder="Ilteris Keskin") }}
-        <br>
-        <label for="email">Email</label>
-        {{ form.email(class="form-control", placeholder="hi@example.com") }}
-        <br>
         <label for="twitter_username">Twitter Username</label>
         {{ form.twitter_username(class="form-control", placeholder="ilteriskeskin") }}
         <br>
@@ -41,6 +35,6 @@
         {{ form.note(class="form-control", placeholder="Optional") }}
         <br>
 
-        <input type="submit" value="Create">
+        <input class="btn btn-primary" type="submit" value="Create">
     </form>
 {% endblock body %}
