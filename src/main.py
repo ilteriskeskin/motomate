@@ -23,6 +23,7 @@ app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 db.init()
 
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = "1"
 
 
 def get_google_provider_cfg():
@@ -231,8 +232,3 @@ def callback():
 def logout():
     session.clear()
     return redirect(url_for('home'))
-
-
-if __name__ == '__main__':
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = "1"
-    app.run(debug=True)
