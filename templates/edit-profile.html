@@ -8,13 +8,13 @@ Create Tour
 <h2>Create Tour</h2>
 <form action="/edit-profile" method="POST">
     <label for="twitter_username">Twitter Username</label>
-    {{ form.twitter_username(class="form-control", placeholder="ilteriskeskin") }}
+    {{ form.twitter_username(class="form-control") }}
     <br>
     <label for="instagram_username">Instagram Username</label>
-    {{ form.instagram_username(class="form-control", placeholder="ilteriskeskin") }}
+    {{ form.instagram_username(class="form-control") }}
     <br>
     <label for="telegram_username">Telegram Username</label>
-    {{ form.telegram_username(class="form-control", placeholder="ilteriskeskin") }}
+    {{ form.telegram_username(class="form-control") }}
     <br>
     <label for="city">City</label>
     {{ form.city(class="form-control", placeholder="Samsun") }}
@@ -27,5 +27,6 @@ Create Tour
     <br>
 
     <input class="btn btn-primary" type="submit" value="Update">
+    <a class="btn btn-danger" href="/profile">Cancel</a>
 </form>
 {% endblock body %}

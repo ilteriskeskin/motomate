@@ -72,14 +72,15 @@ def profile():
 def edit_profile():
     user = db.find_one('users', {"email": session['email']})
     form = ProfileForm(request.form)
-    form['twitter_username'].data = user.get('twitter_username')
-    form['instagram_username'].data = user.get('instagram_username')
-    form['telegram_username'].data = user.get('telegram_username')
-    form['city'].data = user.get('city')
-    form['motorcycle_brand'].data = user.get('motorcycle_brand')
-    form['engine_capacity'].data = user.get('engine_capacity')
+    if request.method == 'GET':
+        form['twitter_username'].data = user.get('twitter_username')
+        form['instagram_username'].data = user.get('instagram_username')
+        form['telegram_username'].data = user.get('telegram_username')
+        form['city'].data = user.get('city')
+        form['motorcycle_brand'].data = user.get('motorcycle_brand')
+        form['engine_capacity'].data = user.get('engine_capacity')
 
-    if request.method == 'POST' and form.validate:
+    elif request.method == 'POST' and form.validate:
         db.find_and_modify('users', query={'email': session['email']},
                            twitter_username=form.twitter_username.data,
                            instagram_username=form.instagram_username.data,
@@ -141,10 +142,13 @@ def join_tour(id):
     tour = db.find_one("tours", {'_id': ObjectId(id)})
     tour['subscriber'].append(session['email'])
     user = db.find_one("users", {'email': session['email']})
-    user['joined_tours'].append({"id": ObjectId(id), "tour_name": tour['tour_name']})
+    user['joined_tours'].append(
+        {"id": ObjectId(id), "tour_name": tour['tour_name']})
 
-    db.find_and_modify("tours", query={"_id": ObjectId(id)}, subscriber=tour['subscriber'])
-    db.find_and_modify('users', query={'email': session['email']}, joined_tours=user['joined_tours'])
+    db.find_and_modify("tours", query={"_id": ObjectId(
+        id)}, subscriber=tour['subscriber'])
+    db.find_and_modify(
+        'users', query={'email': session['email']}, joined_tours=user['joined_tours'])
 
     flash('Joined Tour!', 'success')
     return redirect(url_for('home'))
