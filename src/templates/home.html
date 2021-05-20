@@ -3,7 +3,7 @@
 {% block body %}
 
 <div class="jumbotron text-center">
-    <h3>Welcome to MotoTourMate</h3>
+    <h3>Welcome MotoTourMate {{ session['name'] }}</h3>
     <p>
         Check out the postings below to find the companion you are looking for :)
     </p>
@@ -24,26 +24,26 @@
 <div class="table-responsive-sm">
     <table class="table table-striped table-hover">
         <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">From</th>
-                <th scope="col">To</th>
-                <th scope="col">Date</th>
-            </tr>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Date</th>
+        </tr>
         </thead>
         <tbody>
-            {% for tour in tours %}
-            <a href="/tour-detail/{{ tour.id }}/">
-                <tr onclick="window.location='/tour-detail/{{ tour._id }}'" style="cursor: pointer;">
-                    <td>{{ tour.name }}</td>
-                    <td>{{ tour.email }}</td>
-                    <td>{{ tour.from_city }}</td>
-                    <td>{{ tour.to_city }}</td>
-                    <td>{{ tour.tour_date }}</td>
-                </tr>
-            </a>
-            {% endfor %}
+        {% for tour in tours %}
+        <tr onclick="window.location='/tour-detail/{{ tour._id }}'" style="cursor: pointer;">
+            <td>{{ tour.tour_name }}</td>
+            <td>{{ tour.name }}</td>
+            <td>{{ tour.email }}</td>
+            <td>{{ tour.from_city }}</td>
+            <td>{{ tour.to_city }}</td>
+            <td>{{ tour.tour_date }}</td>
+        </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>

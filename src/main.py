@@ -2,7 +2,7 @@ import os
 import json
 
 from flask import Flask, render_template, flash, redirect, request, session, url_for
-from forms import TourForm
+from forms import TourForm, ProfileForm
 from functools import wraps
 
 # Google Authentication
@@ -48,6 +48,51 @@ def home():
     return render_template('home.html', tours=tours_array)
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/user/<email>')
+def user_detail(email):
+    user = db.find_one('users', {"email": email})
+    return render_template('user-detail.html', user=user)
+
+
+@app.route('/profile')
+@login_required
+def profile():
+    user = db.find_one('users', {"email": session['email']})
+    return render_template('profile.html', user=user)
+
+
+@app.route('/edit-profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    user = db.find_one('users', {"email": session['email']})
+    form = ProfileForm(request.form)
+    form['twitter_username'].data = user.get('twitter_username')
+    form['instagram_username'].data = user.get('instagram_username')
+    form['telegram_username'].data = user.get('telegram_username')
+    form['city'].data = user.get('city')
+    form['motorcycle_brand'].data = user.get('motorcycle_brand')
+    form['engine_capacity'].data = user.get('engine_capacity')
+
+    if request.method == 'POST' and form.validate:
+        db.find_and_modify('users', query={'email': session['email']},
+                           twitter_username=form.twitter_username.data,
+                           instagram_username=form.instagram_username.data,
+                           telegram_username=form.telegram_username.data,
+                           city=form.city.data.lower(),
+                           motorcycle_brand=form.motorcycle_brand.data,
+                           engine_capacity=form.engine_capacity.data.lower().replace(' ', ''),
+                           )
+
+        flash('Profile Updated!', 'success')
+        return redirect(url_for('profile'))
+    return render_template('edit-profile.html', form=form)
+
+
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     query = request.args.get("q")
@@ -57,6 +102,7 @@ def search():
     for tour in tours:
         tours_array.append(tour)
     return render_template('search-result.html', tours=tours_array)
+
 
 @app.route('/tour-detail/<id>', methods=['GET'])
 def tour_detail(id):
@@ -72,15 +118,11 @@ def create_tour():
     form = TourForm(request.form)
     if request.method == 'POST' and form.validate:
         db.insert_one('tours', {
+            'tour_name': form.tour_name.data,
             'name': session['name'],
             'email': session['email'],
-            'twitter_username': form.twitter_username.data,
-            'instagram_username': form.instagram_username.data,
-            'telegram_username': form.telegram_username.data,
             'from_city': form.from_city.data.lower(),
             'to_city': form.to_city.data.lower(),
-            'motorcycle_brand': form.motorcycle_brand.data,
-            'engine_capacity': form.engine_capacity.data.lower().replace(' ', ''),
             'tour_date': form.tour_date.data,
             'note': form.note.data,
             'subscriber': []
@@ -95,10 +137,13 @@ def create_tour():
 @app.route('/join-tour/<id>', methods=['POST'])
 @login_required
 def join_tour(id):
-    subscriber = [session['email']]
-    db.find_and_modify(
-        "tours", query={"_id": ObjectId(id)}, subscriber=subscriber
-    )
+    tour = db.find_one("tours", {'_id': ObjectId(id)})
+    tour['subscriber'].append(session['email'])
+    user = db.find_one("users", {'email': session['email']})
+    user['joined_tours'].append({"id": ObjectId(id), "tour_name": tour['tour_name']})
+
+    db.find_and_modify("tours", query={"_id": ObjectId(id)}, subscriber=tour['subscriber'])
+    db.find_and_modify('users', query={'email': session['email']}, joined_tours=user['joined_tours'])
 
     flash('Joined Tour!', 'success')
     return redirect(url_for('home'))
@@ -171,7 +216,8 @@ def callback():
             db.insert_one("users", {
                 'email': users_email,
                 'name': users_name,
-                'picture': picture
+                'picture': picture,
+                'joined_tours': [],
             })
     else:
         return "User email not available or not verified by Google.", 400

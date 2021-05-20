@@ -1,40 +1,28 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Create Tour
+Create Tour
 {% endblock title %}
 
 {% block body %}
-    <h2>Create Tour</h2>
-    <form action="/create-tour/" method="POST">
-        <label for="twitter_username">Twitter Username</label>
-        {{ form.twitter_username(class="form-control", placeholder="ilteriskeskin") }}
-        <br>
-        <label for="instagram_username">Instagram Username</label>
-        {{ form.instagram_username(class="form-control", placeholder="ilteriskeskin") }}
-        <br>
-        <label for="telegram_username">Telegram Username</label>
-        {{ form.telegram_username(class="form-control", placeholder="ilteriskeskin") }}
-        <br>
-        <label for="from_city">From City</label>
-        {{ form.from_city(class="form-control", placeholder="Samsun") }}
-        <br>
-        <label for="to_city">To City</label>
-        {{ form.to_city(class="form-control", placeholder="Istanbul") }}
-        <br>
-        <label for="motorcycle_brand">Motorcycle Brand</label>
-        {{ form.motorcycle_brand(class="form-control", placeholder="Yamaha Nmax 155") }}
-        <br>
-        <label for="engine_capacity">Engine Capacity</label>
-        {{ form.engine_capacity(class="form-control", placeholder="155cc") }}
-        <br>
-        <label for="tour_date">Tour Date</label>
-        {{ form.tour_date(class="form-control", placeholder="10.12.2021") }}
-        <br>
-        <label for="note">Note</label>
-        {{ form.note(class="form-control", placeholder="Optional") }}
-        <br>
+<h2>Create Tour</h2>
+<form action="/create-tour/" method="POST">
+    <label for="tour_name">Tour Title</label>
+    {{ form.tour_name(class="form-control", placeholder="Samsun-Istanbul Tour") }}
+    <br>
+    <label for="from_city">From City</label>
+    {{ form.from_city(class="form-control", placeholder="Samsun") }}
+    <br>
+    <label for="to_city">To City</label>
+    {{ form.to_city(class="form-control", placeholder="Istanbul") }}
+    <br>
+    <label for="tour_date">Tour Date</label>
+    {{ form.tour_date(class="form-control", placeholder="10.12.2021") }}
+    <br>
+    <label for="note">Note</label>
+    {{ form.note(class="form-control", placeholder="Optional") }}
+    <br>
 
-        <input class="btn btn-primary" type="submit" value="Create">
-    </form>
+    <input class="btn btn-primary" type="submit" value="Create">
+</form>
 {% endblock body %}

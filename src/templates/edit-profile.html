@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Create Tour
+{% endblock title %}
+
+{% block body %}
+<h2>Create Tour</h2>
+<form action="/edit-profile" method="POST">
+    <label for="twitter_username">Twitter Username</label>
+    {{ form.twitter_username(class="form-control", placeholder="ilteriskeskin") }}
+    <br>
+    <label for="instagram_username">Instagram Username</label>
+    {{ form.instagram_username(class="form-control", placeholder="ilteriskeskin") }}
+    <br>
+    <label for="telegram_username">Telegram Username</label>
+    {{ form.telegram_username(class="form-control", placeholder="ilteriskeskin") }}
+    <br>
+    <label for="city">City</label>
+    {{ form.city(class="form-control", placeholder="Samsun") }}
+    <br>
+    <label for="motorcycle_brand">Motorcycle Brand</label>
+    {{ form.motorcycle_brand(class="form-control", placeholder="Yamaha Nmax 155") }}
+    <br>
+    <label for="engine_capacity">Engine Capacity</label>
+    {{ form.engine_capacity(class="form-control", placeholder="155cc") }}
+    <br>
+
+    <input class="btn btn-primary" type="submit" value="Update">
+</form>
+{% endblock body %}

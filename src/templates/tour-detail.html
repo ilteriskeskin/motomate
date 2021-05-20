@@ -8,7 +8,9 @@ Create Tour
 <h2>Tour Details</h2>
 <hr>
 
-<strong>Creator: </strong>{{ tour_detail['name'] }}
+<strong>Tour Title: </strong>{{ tour_detail['tour_name'] }}
+<br>
+<strong>Creator: </strong> <a href="/user/{{ tour_detail['email'] }}">{{ tour_detail['name'] }}</a>
 <hr>
 
 <h3>Event Infos</h3>
@@ -19,7 +21,7 @@ Create Tour
 <strong>To City: </strong>{{ tour_detail['to_city'] }}
 <hr>
 
-<h3>Creator's Engine Info</h3>
+<!--<h3>Creator's Engine Info</h3>
 <strong>Motorcycle Brand: </strong>{{ tour_detail['motorcycle_brand'] }}
 <br>
 <strong>Engine Capacity: </strong>{{ tour_detail['engine_capacity'] }}
@@ -35,7 +37,7 @@ Create Tour
                                         target="_blank">{{ tour_detail['instagram_username'] }}</a>
 <br>
 <strong>Telegram Username</strong>{{ tour_detail['telegram_username'] }}
-<hr>
+<hr>-->
 
 <h3>Creator's Note</h3>
 <strong>Note: </strong>{{ tour_detail['note'] }}
@@ -51,6 +53,8 @@ Create Tour
 
 <h3>Joined User</h3>
 {% for subs in tour_detail['subscriber'] %}
-    <li>{{ subs }}</li>
+<li>
+    <a href="/user/{{ subs }}">{{ subs }}</a>
+</li>
 {% endfor %}
 {% endblock body %}
