@@ -1,24 +1,31 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Create Tour
+Tur Detayları
 {% endblock title %}
 
 {% block body %}
-<h2>Tour Details</h2>
+
+{% if session['email'] == tour_detail['email'] %}
+<a class="btn btn-success" href="/edit-tour/{{ tour_detail['_id'] }}">Tur Bilgilerini Düzenle</a>
+{% endif %}
+
+<br><br>
+
+<h2>Tour Detayları</h2>
 <hr>
 
-<strong>Tour Title: </strong>{{ tour_detail['tour_name'] }}
+<strong>Tur Başlığı: </strong>{{ tour_detail['tour_name'] }}
 <br>
-<strong>Creator: </strong> <a href="/user/{{ tour_detail['email'] }}">{{ tour_detail['name'] }}</a>
+<strong>Oluşturan: </strong> <a href="/user/{{ tour_detail['email'] }}">{{ tour_detail['name'] }}</a>
 <hr>
 
-<h3>Event Infos</h3>
-<strong>Date: </strong>{{ tour_detail['tour_date'] }}
+<h3>Tur Bilgileri</h3>
+<strong>Tarih: </strong>{{ tour_detail['tour_date'] }}
 <br>
-<strong>From City: </strong>{{ tour_detail['from_city'] }}
+<strong>Başlangıç Şehri: </strong>{{ tour_detail['from_city'] }}
 <br>
-<strong>To City: </strong>{{ tour_detail['to_city'] }}
+<strong>Varış Şehri: </strong>{{ tour_detail['to_city'] }}
 <hr>
 
 <!--<h3>Creator's Engine Info</h3>
@@ -39,19 +46,19 @@ Create Tour
 <strong>Telegram Username</strong>{{ tour_detail['telegram_username'] }}
 <hr>-->
 
-<h3>Creator's Note</h3>
-<strong>Note: </strong>{{ tour_detail['note'] }}
+<h3>Oluşturanın Notları:</h3>
+<strong>Not: </strong>{{ tour_detail['note'] }}
 
 <br><br><br><br>
 <form action="/join-tour/{{ tour_detail['_id'] }}" method="POST">
     <div class="text-center">
-        <input class="btn btn-primary" type="submit" value="Join Tour">
+        <input class="btn btn-primary" type="submit" value="Tura Katıl">
     </div>
 </form>
 
 <hr>
 
-<h3>Joined User</h3>
+<h3>Katılımcılar</h3>
 {% for subs in tour_detail['subscriber'] %}
 <li>
     <a href="/user/{{ subs }}">{{ subs }}</a>

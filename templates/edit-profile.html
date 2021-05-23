@@ -5,28 +5,28 @@ Create Tour
 {% endblock title %}
 
 {% block body %}
-<h2>Create Tour</h2>
+<h2>Profili Düzenle</h2>
 <form action="/edit-profile" method="POST">
-    <label for="twitter_username">Twitter Username</label>
+    <label for="twitter_username">Twitter Kullanıcı Adı</label>
     {{ form.twitter_username(class="form-control") }}
     <br>
-    <label for="instagram_username">Instagram Username</label>
+    <label for="instagram_username">Instagram Kullanıcı Adı</label>
     {{ form.instagram_username(class="form-control") }}
     <br>
-    <label for="telegram_username">Telegram Username</label>
+    <label for="telegram_username">Telegram Kullanıcı Adı</label>
     {{ form.telegram_username(class="form-control") }}
     <br>
-    <label for="city">City</label>
+    <label for="city">Şehir</label>
     {{ form.city(class="form-control", placeholder="Samsun") }}
     <br>
-    <label for="motorcycle_brand">Motorcycle Brand</label>
+    <label for="motorcycle_brand">Motosiklet Markası</label>
     {{ form.motorcycle_brand(class="form-control", placeholder="Yamaha Nmax 155") }}
     <br>
-    <label for="engine_capacity">Engine Capacity</label>
+    <label for="engine_capacity">Motor Gücü</label>
     {{ form.engine_capacity(class="form-control", placeholder="155cc") }}
     <br>
 
-    <input class="btn btn-primary" type="submit" value="Update">
-    <a class="btn btn-danger" href="/profile">Cancel</a>
+    <input class="btn btn-primary" type="submit" value="Güncelle">
+    <a class="btn btn-danger" href="/profile">İptal</a>
 </form>
 {% endblock body %}

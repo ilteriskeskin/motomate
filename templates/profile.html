@@ -6,7 +6,7 @@
     <div class="text-center">
         <img src="{{ user.picture }}" alt="profile_picture" style="border-radius: 100%" width="200" height="200">
         <br><br>
-        <h5>Name: {{ user.name }}</h5>
+        <h5>İsim: {{ user.name }}</h5>
         <strong>Email:</strong>
         <a href="mailto:{{ user.email }}">{{ user.email }}</a>
         <br>
@@ -19,16 +19,16 @@
         <strong>Telegram:</strong>
         <a href="https://t.me/{{ user.twitter_username }}">{{ user.telegram_username }}</a>
         <br>
-        <strong>City:</strong>
+        <strong>Şehir:</strong>
         <a href="https://tr.wikipedia.org/wiki/{{ user.city }}_(il)" target="_blank">{{ user.city }}</a>
         <br>
         <hr>
-        <strong>Motorcycle Brand:</strong>
+        <strong>Motosiklet Markası:</strong>
         <p>{{ user.motorcycle_brand }}</p>
-        <strong>Engine Capacity:</strong>
+        <strong>Motor Gücü:</strong>
         <p>{{ user.engine_capacity }}</p>
-        <a class="btn btn-primary" href="/edit-profile">Edit Profile</a>
-        <a class="btn btn-success" href="/user/{{ user.email }}">Outside View</a>
+        <a class="btn btn-primary" href="/edit-profile">Profili Düzenle</a>
+        <a class="btn btn-success" href="/user/{{ user.email }}">Dışarıdan Bak</a>
     </div>
 </div>
 

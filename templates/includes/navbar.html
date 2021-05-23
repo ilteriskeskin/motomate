@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="/about">About</a>
+                <a class="nav-link" href="/about">Hakkında</a>
             </li>
         </ul>
 
@@ -15,21 +15,21 @@
 
             {% if session["logged_in"] == True %}
             <li class="nav-item active">
-                <a class="nav-link" href="/profile">Profile</a>
+                <a class="nav-link" href="/profile">Profil</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="/create-tour">Create Tour</a>
+                <a class="nav-link" href="/create-tour">Tur Oluştur</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="/logout">Logout</a>
+                <a class="nav-link" href="/logout">Çıkış Yap</a>
             </li>
             {% else %}
             <li class="nav-item active">
-                <a class="nav-link" href="/login">Login</a>
+                <a class="nav-link" href="/login">Giriş Yap</a>
             </li>
 
             <li class="nav-item active">
-                <a class="nav-link" href="/login">Register</a>
+                <a class="nav-link" href="/login">Kayıt Ol</a>
             </li>
             {% endif %}
         </ul>

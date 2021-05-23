@@ -2,10 +2,12 @@ import os
 import json
 
 from flask import Flask, render_template, flash, redirect, request, session, url_for
+import flask
 from forms import TourForm, ProfileForm
 from functools import wraps
 
 # Google Authentication
+
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 from bson import ObjectId
@@ -95,6 +97,36 @@ def edit_profile():
     return render_template('edit-profile.html', form=form)
 
 
+@app.route('/edit-tour/<id>', methods=['GET', 'POST'])
+@login_required
+def edit_tour(id):
+    tour = db.find_one('tours', {"_id": ObjectId(id)})
+    if session['email'] == tour['email']:
+        form = TourForm(request.form)
+        if request.method == 'GET':
+            form['tour_name'].data = tour.get('tour_name')
+            form['from_city'].data = tour.get('from_city')
+            form['to_city'].data = tour.get('to_city')
+            form['tour_date'].data = tour.get('tour_date')
+            form['note'].data = tour.get('note')
+
+        elif request.method == 'POST' and form.validate:
+            db.find_and_modify('tours', query={'_id': ObjectId(id)},
+                               tour_name=form.tour_name.data,
+                               from_city=form.from_city.data,
+                               to_city=form.to_city.data,
+                               tour_date=form.tour_date.data.lower(),
+                               note=form.note.data,
+                               )
+
+            flash('Tur Bilgileri Güncellendi!', 'success')
+            return redirect(url_for('home'))
+        return render_template('edit-tour.html', form=form, id=tour['_id'])
+    else:
+        flash('Yalnızca kendi turlarını düzenleyebilirsin!', 'danger')
+        return redirect(url_for('home'))
+
+
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     query = request.args.get("q")
@@ -119,7 +151,7 @@ def tour_detail(id):
 def create_tour():
     form = TourForm(request.form)
     if request.method == 'POST' and form.validate:
-        db.insert_one('tours', {
+        tour_id = db.insert_one('tours', {
             'tour_name': form.tour_name.data,
             'name': session['name'],
             'email': session['email'],
@@ -127,8 +159,14 @@ def create_tour():
             'to_city': form.to_city.data.lower(),
             'tour_date': form.tour_date.data,
             'note': form.note.data,
-            'subscriber': []
+            'subscriber': [session['email']]
         })
+
+        user = db.find_one("users", {'email': session['email']})
+        user['joined_tours'].append(
+            {"id": ObjectId(tour_id.inserted_id), "tour_name": form.tour_name.data, })
+        db.find_and_modify(
+            'users', query={'email': session['email']}, joined_tours=user['joined_tours'])
 
         flash('New tour created!', 'success')
         return redirect(url_for('home'))
@@ -140,18 +178,22 @@ def create_tour():
 @login_required
 def join_tour(id):
     tour = db.find_one("tours", {'_id': ObjectId(id)})
-    tour['subscriber'].append(session['email'])
     user = db.find_one("users", {'email': session['email']})
-    user['joined_tours'].append(
-        {"id": ObjectId(id), "tour_name": tour['tour_name']})
+    if session['email'] not in tour['subscriber']:
+        tour['subscriber'].append(session['email'])
+        user['joined_tours'].append(
+            {"id": ObjectId(id), "tour_name": tour['tour_name']})
 
-    db.find_and_modify("tours", query={"_id": ObjectId(
-        id)}, subscriber=tour['subscriber'])
-    db.find_and_modify(
-        'users', query={'email': session['email']}, joined_tours=user['joined_tours'])
+        db.find_and_modify("tours", query={"_id": ObjectId(
+            id)}, subscriber=tour['subscriber'])
+        db.find_and_modify(
+            'users', query={'email': session['email']}, joined_tours=user['joined_tours'])
 
-    flash('Joined Tour!', 'success')
-    return redirect(url_for('home'))
+        flash('Tura katıldın!', 'success')
+        return redirect(url_for('home'))
+    else:
+        flash('Zaten bu tura katılıyorsun!', 'warning')
+        return redirect(url_for('home'))
 
 
 @app.route("/login")

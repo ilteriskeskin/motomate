@@ -5,8 +5,8 @@ Create Tour
 {% endblock title %}
 
 {% block body %}
-<h2>Tur Oluştur</h2>
-<form action="/create-tour/" method="POST">
+<h2>Profili Düzenle</h2>
+<form action="/edit-tour/{{ id }}" method="POST">
     <label for="tour_name">Tur Başlığı</label>
     {{ form.tour_name(class="form-control", placeholder="Samsun-Istanbul Tour") }}
     <br>
@@ -23,6 +23,7 @@ Create Tour
     {{ form.note(class="form-control", placeholder="Optional") }}
     <br>
 
-    <input class="btn btn-primary" type="submit" value="Create">
+    <input class="btn btn-primary" type="submit" value="Güncelle">
+    <a class="btn btn-danger" href="/">İptal</a>
 </form>
 {% endblock body %}
