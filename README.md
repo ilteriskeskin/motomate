@@ -5,15 +5,10 @@ Find your tour buddy
 
 # Here is our .env file
 
------------------------------------------------------------
- CORE
------------------------------------------------------------
+
 SECRET_KEY=django-insecure--$k)e@8j9gz#pw@%(h%5e-+6g=#9dy#fie8#0#_y0o)^(4z*rn
 DEBUG=True
 
------------------------------------------------------------
- DATABASE
------------------------------------------------------------
 POSTGRES_NAME=moto2rmate
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=samsunlumotorsevelerolarakveritabanınıkorumalıyıZ1965._.
