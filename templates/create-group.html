@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Create Group
+{% endblock title %}
+
+{% block body %}
+<h2>Grup Oluştur</h2>
+<form action="/create-group/" method="POST">
+    <label for="group_name">Grup İsmi</label>
+    {{ form.group_name(class="form-control", placeholder="Samsun Motosiklet Topluluğu") }}
+    <br>
+    <label for="city">Şehir</label>
+    {{ form.city(class="form-control", placeholder="Samsun") }}
+    <br>
+    <label for="city">İletişim Maili</label>
+    {{ form.email(class="form-control", placeholder="aliilteriskeskin@gmail.com") }}
+    <br>
+    <label for="note">Açıklama</label>
+    {{ form.note(class="form-control", placeholder="Optional") }}
+    <br>
+
+    <input class="btn btn-primary" type="submit" value="Create">
+</form>
+{% endblock body %}

@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="jumbotron text-center">
+    <h3>MotoTourMate'te oluşturulan grupları burda görebilirsiniz.</h3>
+</div>
+
+{% if groups == [] %}
+<div class="alert alert-danger" role="alert">
+    Henüz bir grup oluşturulmadı.
+</div>
+{% else %}
+<div class="d-flex justify-content-center px-5">
+    <form class="form-inline" action="{{ url_for('search_group') }}" method="GET">
+        <input class="form-control mr-sm-2" type="search" placeholder="Grup İsmi" aria-label="Search" name="q">
+        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Ara</button>
+    </form>
+</div>
+<br><br><br>
+
+<div class="table-responsive-sm">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">İsim</th>
+                <th scope="col">İletişim Maili</th>
+                <th scope="col">Şehri</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in groups %}
+            <tr onclick="window.location='/group-detail/{{ group._id }}'" style="cursor: pointer;">
+                <td>{{ group.group_name }}</td>
+                <td>{{ group.email }}</td>
+                <td>{{ group.city }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock body %}

@@ -15,13 +15,7 @@
     Henüz bir tur oluşturulmadı.
 </div>
 {% else %}
-<div class="d-flex justify-content-center px-5">
-    <form class="form-inline" action="{{ url_for('search') }}" method="GET">
-        <input class="form-control mr-sm-2" type="search" placeholder="Başlangıç Şehri" aria-label="Search" name="q">
-        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Ara</button>
-    </form>
-</div>
-<br><br><br>
+<strong>Son Eklenen Turlar</strong>
 <div class="table-responsive-sm">
     <table class="table table-striped table-hover">
         <thead>
@@ -48,5 +42,46 @@
         </tbody>
     </table>
 </div>
+
+{% if tours|length >= 10 %}
+<a href="/tours">Daha Fazla</a>
+{% endif %}
+
+{% endif %}
+
+<br><br>
+<hr>
+<br><br>
+
+{% if groups == [] %}
+<div class="alert alert-danger" role="alert">
+    Henüz bir grup oluşturulmadı.
+</div>
+{% else %}
+<strong>Son Eklenen Gruplar</strong>
+<div class="table-responsive-sm">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">İsim</th>
+                <th scope="col">İletişim</th>
+                <th scope="col">Şehir</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in groups %}
+            <tr onclick="window.location='/group-detail/{{ group._id }}'" style="cursor: pointer;">
+                <td>{{ group.group_name }}</td>
+                <td>{{ group.email }}</td>
+                <td>{{ group.city }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if groups|length >= 10 %}
+<a href="/groups">Daha Fazla</a>
+{% endif %}
 {% endif %}
 {% endblock body %}

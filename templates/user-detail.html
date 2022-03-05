@@ -28,6 +28,13 @@
         <strong>Motor Gücü:</strong>
         <p>{{ user.engine_capacity }}</p>
 
+        <strong>Katıldığı Gruplar: </strong>
+        {% for group in user.joined_groups %}
+        <li>
+            <a href="/group-detail/{{ group.id }}">{{ group.group_name }}</a>
+        </li>
+        {% endfor %}
+        <hr>
         <strong>Katıldığı Turlar: </strong>
         {% for tour in user.joined_tours %}
         <li>

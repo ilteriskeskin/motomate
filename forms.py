@@ -1,4 +1,5 @@
 from wtforms import Form, StringField, validators, TextAreaField
+from wtforms.fields.html5 import EmailField
 
 
 class TourForm(Form):
@@ -19,3 +20,13 @@ class ProfileForm(Form):
     city = StringField("City")
     motorcycle_brand = StringField("Motorcycle brand")
     engine_capacity = StringField("Engine Capacity (125cc)")
+
+
+class GroupForm(Form):
+    group_name = StringField("Group Name", validators=[
+        validators.DataRequired(message="Please fill this field")])
+    city = StringField("City", validators=[
+                       validators.DataRequired(message="Please fill this field")])
+    email = EmailField("Email", validators=[
+                       validators.Email(message="Invalid email address")])
+    note = TextAreaField("Note", validators=[validators.Length(max=240)])

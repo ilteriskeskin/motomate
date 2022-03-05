@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Edit Group
+{% endblock title %}
+
+{% block body %}
+<h2>Profili Düzenle</h2>
+<form action="/edit-group/{{ id }}" method="POST">
+    <label for="group_name">Grup İsmi</label>
+    {{ form.group_name(class="form-control", placeholder="Samsun-Istanbul Tour") }}
+    <br>
+    <label for="city">Şehir</label>
+    {{ form.city(class="form-control", placeholder="Samsun") }}
+    <br>
+    <label for="email">İletişim Maili</label>
+    {{ form.email(class="form-control", placeholder="aliilteriskeskin@gmail.com") }}
+    <br>
+    <label for="note">Açıklama</label>
+    {{ form.note(class="form-control", placeholder="Optional") }}
+    <br>
+
+    <input class="btn btn-primary" type="submit" value="Güncelle">
+    <a class="btn btn-danger" href="/">İptal</a>
+</form>
+{% endblock body %}

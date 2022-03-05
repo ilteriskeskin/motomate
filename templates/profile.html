@@ -4,10 +4,8 @@
 
 <div class="container">
     <div class="text-center">
-        {% if {{user.picture}} %}
         <img src="{{ user.picture }}" alt="profile_picture" style="border-radius: 100%" width="200" height="200">
         <br><br>
-        {% endif %}
         <h5>İsim: {{ user.name }}</h5>
         <strong>Email:</strong>
         <a href="mailto:{{ user.email }}">{{ user.email }}</a>
@@ -31,6 +29,22 @@
         <p>{{ user.engine_capacity }}</p>
         <a class="btn btn-primary" href="/edit-profile">Profili Düzenle</a>
         <a class="btn btn-success" href="/user/{{ user.email }}">Dışarıdan Bak</a>
+
+        <hr>
+
+        <strong>Katıldığı Gruplar: </strong>
+        {% for group in user.joined_groups %}
+        <li>
+            <a href="/group-detail/{{ group.id }}">{{ group.group_name }}</a>
+        </li>
+        {% endfor %}
+        <hr>
+        <strong>Katıldığı Turlar: </strong>
+        {% for tour in user.joined_tours %}
+        <li>
+            <a href="/tour-detail/{{ tour.id }}">{{ tour.tour_name }}</a>
+        </li>
+        {% endfor %}
     </div>
 </div>
 

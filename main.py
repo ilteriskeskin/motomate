@@ -2,8 +2,7 @@ import os
 import json
 
 from flask import Flask, render_template, flash, redirect, request, session, url_for
-import flask
-from forms import TourForm, ProfileForm
+from forms import TourForm, ProfileForm, GroupForm
 from functools import wraps
 
 # Google Authentication
@@ -12,6 +11,7 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests
 from bson import ObjectId
 
+from utils.group_name_diff import similar
 from utils.database import db
 from configs import SECRET_KEY, GOOGLE_CLIENT_SECRET, GOOGLE_CLIENT_ID
 
@@ -43,16 +43,36 @@ def login_required(f):
 
 @app.route('/')
 def home():
-    tours = db.find('tours', {})
+    tours = db.find('tours', {}).limit(10)
+    groups = db.find('groups', {}).limit(10)
+
     tours_array = []
+    group_array = []
+
     for tour in tours:
         tours_array.append(tour)
-    return render_template('home.html', tours=tours_array)
+
+    for group in groups:
+        group_array.append(group)
+
+    return render_template('home.html', tours=tours_array, groups=group_array)
 
 
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+
+@app.route('/tours')
+def tours():
+    tours = db.find('tours', {})
+    return render_template('tours.html', tours=tours)
+
+
+@app.route('/groups')
+def groups():
+    groups = db.find('groups', {})
+    return render_template('groups.html', groups=groups)
 
 
 @app.route('/user/<email>')
@@ -119,21 +139,44 @@ def edit_tour(id):
                                )
 
             flash('Tur Bilgileri Güncellendi!', 'success')
+
             return redirect(url_for('home'))
+
         return render_template('edit-tour.html', form=form, id=tour['_id'])
     else:
         flash('Yalnızca kendi turlarını düzenleyebilirsin!', 'danger')
+
         return redirect(url_for('home'))
+
+
+@app.route('/search-group', methods=['GET', 'POST'])
+def search_group():
+    query = request.args.get("q")
+    query = query.lower()
+    groups = list(db.find('groups', {}))
+    groups_array = []
+
+    if groups:
+        for group in groups:
+            similar_rate = similar(query, group['group_name'].lower())
+            print(similar_rate)
+            if similar_rate > 0.37:
+                groups_array.append(group)
+
+    return render_template('search-result-for-groups.html', groups=groups_array)
 
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     query = request.args.get("q")
     query = query.lower()
-    tours = db.find('tours', {'from_city': query})
+    tours = list(db.find('tours', {'from_city': query}))
     tours_array = []
-    for tour in tours:
-        tours_array.append(tour)
+
+    if tours:
+        for tour in tours:
+            tours_array.append(tour)
+
     return render_template('search-result.html', tours=tours_array)
 
 
@@ -211,6 +254,7 @@ def edit_group(id):
             db.find_and_modify('groups', query={'_id': ObjectId(id)},
                                group_name=form.group_name.data,
                                city=form.city.data,
+                               email=form.email.data,
                                note=form.note.data,
                                )
 
@@ -227,6 +271,7 @@ def group_detail(id):
     group_details = db.find_one('groups', {
         '_id': ObjectId(id)
     })
+    print(group_details)
     return render_template('group-detail.html', group_detail=group_details)
 
 
@@ -237,16 +282,22 @@ def create_group():
     if request.method == 'POST' and form.validate:
         group_id = db.insert_one('groups', {
             'group_name': form.group_name.data,
-            'email': form.group_email.data,
+            'email': form.email.data,
             'city': form.city.data.lower(),
             'members': [session['email']],
             'note': form.note.data,
             'admins': [session['email']]
         }).inserted_id
 
-        user = db.find_one("user", {'email': session['email']})
-        user['joined_groups'].append(
-            {"id": ObjectId(group_id), "group_name": form.group_name.data, })
+        user = db.find_one("users", {'email': session['email']})
+        if user.get('joined_groups'):
+            user['joined_groups'].append(
+                {"id": ObjectId(group_id), "group_name": form.group_name.data, })
+        else:
+            user['joined_groups'] = [{
+                "id": ObjectId(group_id),
+                "group_name": form.group_name.data
+            }]
         db.find_and_modify(
             'users', query={'email': session['email']}, joined_groups=user['joined_groups'])
 
