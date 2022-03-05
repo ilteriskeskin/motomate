@@ -13,15 +13,14 @@ import requests
 from bson import ObjectId
 
 from utils.database import db
+from configs import SECRET_KEY, GOOGLE_CLIENT_SECRET, GOOGLE_CLIENT_ID
 
-GOOGLE_CLIENT_ID = "1034191173571-nrf1kvoenfab8ca52r2tpl3k3nqocal0.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET = "GhRyXEqcV_pJw4QkpL8dbknt"
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
 )
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
+app.config['SECRET_KEY'] = SECRET_KEY
 db.init()
 
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
@@ -193,6 +192,89 @@ def join_tour(id):
         return redirect(url_for('home'))
     else:
         flash('Zaten bu tura katılıyorsun!', 'warning')
+        return redirect(url_for('home'))
+
+
+@app.route('/edit-group/<id>', methods=['GET', 'POST'])
+@login_required
+def edit_group(id):
+    group = db.find_one('groups', {"_id": ObjectId(id)})
+    if session['email'] in group['admins']:
+        form = GroupForm(request.form)
+        if request.method == 'GET':
+            form['group_name'].data = group.get('group_name')
+            form['city'].data = group.get('city')
+            form['email'].data = group.get('email')
+            form['note'].data = group.get('note')
+
+        elif request.method == 'POST' and form.validate:
+            db.find_and_modify('groups', query={'_id': ObjectId(id)},
+                               group_name=form.group_name.data,
+                               city=form.city.data,
+                               note=form.note.data,
+                               )
+
+            flash('Grup Bilgileri Güncellendi!', 'success')
+            return redirect(url_for('home'))
+        return render_template('edit-group.html', form=form, id=group['_id'])
+    else:
+        flash('Yalnızca kendi turlarını düzenleyebilirsin!', 'danger')
+        return redirect(url_for('home'))
+
+
+@app.route('/group-detail/<id>', methods=['GET'])
+def group_detail(id):
+    group_details = db.find_one('groups', {
+        '_id': ObjectId(id)
+    })
+    return render_template('group-detail.html', group_detail=group_details)
+
+
+@app.route('/create-group/', methods=['GET', 'POST'])
+@login_required
+def create_group():
+    form = GroupForm(request.form)
+    if request.method == 'POST' and form.validate:
+        group_id = db.insert_one('groups', {
+            'group_name': form.group_name.data,
+            'email': form.group_email.data,
+            'city': form.city.data.lower(),
+            'members': [session['email']],
+            'note': form.note.data,
+            'admins': [session['email']]
+        }).inserted_id
+
+        user = db.find_one("user", {'email': session['email']})
+        user['joined_groups'].append(
+            {"id": ObjectId(group_id), "group_name": form.group_name.data, })
+        db.find_and_modify(
+            'users', query={'email': session['email']}, joined_groups=user['joined_groups'])
+
+        flash('New group created!', 'success')
+        return redirect(url_for('home'))
+
+    return render_template('create-group.html', form=form)
+
+
+@app.route('/join-group/<id>', methods=['POST'])
+@login_required
+def join_group(id):
+    group = db.find_one("groups", {'_id': ObjectId(id)})
+    user = db.find_one("users", {'email': session['email']})
+    if session['email'] not in group['members']:
+        group['members'].append(session['email'])
+        user['joined_groups'].append(
+            {"id": ObjectId(id), "group_name": tour['group_name']})
+
+        db.find_and_modify("groups", query={"_id": ObjectId(
+            id)}, members=group['members'])
+        db.find_and_modify(
+            'users', query={'email': session['email']}, joined_groups=user['joined_groups'])
+
+        flash('Gruba katıldın!', 'success')
+        return redirect(url_for('home'))
+    else:
+        flash('Zaten bu gruptasın!', 'warning')
         return redirect(url_for('home'))
 
 

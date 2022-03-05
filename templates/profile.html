@@ -4,8 +4,10 @@
 
 <div class="container">
     <div class="text-center">
+        {% if {{user.picture}} %}
         <img src="{{ user.picture }}" alt="profile_picture" style="border-radius: 100%" width="200" height="200">
         <br><br>
+        {% endif %}
         <h5>İsim: {{ user.name }}</h5>
         <strong>Email:</strong>
         <a href="mailto:{{ user.email }}">{{ user.email }}</a>
