@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, validators, TextAreaField
+from wtforms import Form, StringField, validators, TextAreaField, BooleanField
 from wtforms.fields.html5 import EmailField
 
 
@@ -11,6 +11,7 @@ class TourForm(Form):
     tour_date = StringField("Tour Date", validators=[
         validators.DataRequired(message="Please fill this field")])
     note = TextAreaField("Note", validators=[validators.Length(max=240)])
+    is_private = BooleanField("Gruba Özel mi?")
 
 
 class ProfileForm(Form):

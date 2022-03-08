@@ -1,28 +1,31 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Create Tour
+    Create Tour
 {% endblock title %}
 
 {% block body %}
-<h2>Tur Oluştur</h2>
-<form action="/create-tour/" method="POST">
-    <label for="tour_name">Tur Başlığı</label>
-    {{ form.tour_name(class="form-control", placeholder="Samsun-Istanbul Tour") }}
-    <br>
-    <label for="from_city">Başlangıç Şehri</label>
-    {{ form.from_city(class="form-control", placeholder="Samsun") }}
-    <br>
-    <label for="to_city">Varış Şehri</label>
-    {{ form.to_city(class="form-control", placeholder="Istanbul") }}
-    <br>
-    <label for="tour_date">Tur Tarihi</label>
-    {{ form.tour_date(class="form-control", placeholder="10.12.2021") }}
-    <br>
-    <label for="note">Not</label>
-    {{ form.note(class="form-control", placeholder="Optional") }}
-    <br>
+    <h2>Tur Oluştur</h2>
+    <form action="/create-tour/" method="POST">
+        <label for="tour_name">Tur Başlığı</label>
+        {{ form.tour_name(class="form-control", placeholder="Samsun-Istanbul Tour") }}
+        <br>
+        <label for="from_city">Başlangıç Şehri</label>
+        {{ form.from_city(class="form-control", placeholder="Samsun") }}
+        <br>
+        <label for="to_city">Varış Şehri</label>
+        {{ form.to_city(class="form-control", placeholder="Istanbul") }}
+        <br>
+        <label for="tour_date">Tur Tarihi</label>
+        {{ form.tour_date(class="form-control", placeholder="10.12.2021") }}
+        <br>
+        <label for="note">Not</label>
+        {{ form.note(class="form-control", placeholder="Optional") }}
+        <br>
+        <label for="is_private">Gruba Özel</label>
+        {{ form.is_private() }}
+        <br>
 
-    <input class="btn btn-primary" type="submit" value="Create">
-</form>
+        <input class="btn btn-primary" type="submit" value="Create">
+    </form>
 {% endblock body %}

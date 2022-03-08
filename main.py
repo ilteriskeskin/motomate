@@ -43,7 +43,7 @@ def login_required(f):
 
 @app.route('/')
 def home():
-    tours = db.find('tours', {}).limit(10)
+    tours = db.find('tours', {'is_private': False}).limit(10)
     groups = db.find('groups', {}).limit(10)
 
     tours_array = []
@@ -65,8 +65,22 @@ def about():
 
 @app.route('/tours')
 def tours():
+    tour_list = []
     tours = db.find('tours', {})
-    return render_template('tours.html', tours=tours)
+
+    for tour in tours:
+        if tour.get('is_private'):
+            if session.get('email'):
+                groups = db.find('groups', query={'admins': {'$in': [tour['email']]}})
+
+                for group in groups:
+                    if session['email'] in group['members']:
+                        tour_list.append(tour)
+
+        else:
+            tour_list.append(tour)
+
+    return render_template('tours.html', tours=tour_list)
 
 
 @app.route('/groups')
@@ -128,6 +142,7 @@ def edit_tour(id):
             form['to_city'].data = tour.get('to_city')
             form['tour_date'].data = tour.get('tour_date')
             form['note'].data = tour.get('note')
+            form['is_private'].data = tour.get('is_private')
 
         elif request.method == 'POST' and form.validate:
             db.find_and_modify('tours', query={'_id': ObjectId(id)},
@@ -136,6 +151,7 @@ def edit_tour(id):
                                to_city=form.to_city.data,
                                tour_date=form.tour_date.data.lower(),
                                note=form.note.data,
+                               is_private=form.is_private.data
                                )
 
             flash('Tur Bilgileri Güncellendi!', 'success')
@@ -159,7 +175,6 @@ def search_group():
     if groups:
         for group in groups:
             similar_rate = similar(query, group['group_name'].lower())
-            print(similar_rate)
             if similar_rate > 0.37:
                 groups_array.append(group)
 
@@ -201,7 +216,8 @@ def create_tour():
             'to_city': form.to_city.data.lower(),
             'tour_date': form.tour_date.data,
             'note': form.note.data,
-            'subscriber': [session['email']]
+            'subscriber': [session['email']],
+            'is_private': form.is_private.data
         })
 
         user = db.find_one("users", {'email': session['email']})
@@ -271,7 +287,7 @@ def group_detail(id):
     group_details = db.find_one('groups', {
         '_id': ObjectId(id)
     })
-    print(group_details)
+
     return render_template('group-detail.html', group_detail=group_details)
 
 
@@ -312,10 +328,15 @@ def create_group():
 def join_group(id):
     group = db.find_one("groups", {'_id': ObjectId(id)})
     user = db.find_one("users", {'email': session['email']})
+
     if session['email'] not in group['members']:
         group['members'].append(session['email'])
-        user['joined_groups'].append(
-            {"id": ObjectId(id), "group_name": tour['group_name']})
+
+        try:
+            user['joined_groups'].append(
+                {"id": ObjectId(id), "group_name": group['group_name']})
+        except:
+            user['joined_groups'] = [{"id": ObjectId(id), "group_name": group['group_name']}]
 
         db.find_and_modify("groups", query={"_id": ObjectId(
             id)}, members=group['members'])

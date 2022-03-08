@@ -2,50 +2,51 @@
 
 {% block body %}
 
-<div class="container">
-    <div class="text-center">
-        <img src="{{ user.picture }}" alt="profile_picture" style="border-radius: 100%" width="200" height="200">
-        <br><br>
-        <h5>İsim: {{ user.name }}</h5>
-        <strong>Email:</strong>
-        <a href="mailto:{{ user.email }}">{{ user.email }}</a>
-        <br>
-        <strong>Twitter:</strong>
-        <a href="https://twitter.com/{{ user.twitter_username }}" target="_blank">{{ user.twitter_username }}</a>
-        <br>
-        <strong>Instagram:</strong>
-        <a href="https://instagram.com/{{ user.twitter_username }}" target="_blank">{{ user.instagram_username }}</a>
-        <br>
-        <strong>Telegram:</strong>
-        <a href="https://t.me/{{ user.twitter_username }}">{{ user.telegram_username }}</a>
-        <br>
-        <strong>Şehir:</strong>
-        <a href="https://tr.wikipedia.org/wiki/{{ user.city }}_(il)" target="_blank">{{ user.city }}</a>
-        <br>
-        <hr>
-        <strong>Motosiklet Markası:</strong>
-        <p>{{ user.motorcycle_brand }}</p>
-        <strong>Motor Gücü:</strong>
-        <p>{{ user.engine_capacity }}</p>
-        <a class="btn btn-primary" href="/edit-profile">Profili Düzenle</a>
-        <a class="btn btn-success" href="/user/{{ user.email }}">Dışarıdan Bak</a>
+    <div class="container">
+        <div class="text-center">
+            <img src="{{ user.picture }}" alt="profile_picture" style="border-radius: 100%" width="200" height="200">
+            <br><br>
+            <h5>İsim: {{ user.name }}</h5>
+            <strong>Email:</strong>
+            <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+            <br>
+            <strong>Twitter:</strong>
+            <a href="https://twitter.com/{{ user.twitter_username }}" target="_blank">{{ user.twitter_username }}</a>
+            <br>
+            <strong>Instagram:</strong>
+            <a href="https://instagram.com/{{ user.twitter_username }}"
+               target="_blank">{{ user.instagram_username }}</a>
+            <br>
+            <strong>Telegram:</strong>
+            <a href="https://t.me/{{ user.twitter_username }}">{{ user.telegram_username }}</a>
+            <br>
+            <strong>Şehir:</strong>
+            <a href="https://tr.wikipedia.org/wiki/{{ user.city }}_(il)" target="_blank">{{ user.city }}</a>
+            <br>
+            <hr>
+            <strong>Motosiklet Markası:</strong>
+            <p>{{ user.motorcycle_brand }}</p>
+            <strong>Motor Gücü:</strong>
+            <p>{{ user.engine_capacity }}</p>
+            <a class="btn btn-primary" href="/edit-profile">Profili Düzenle</a>
+            <a class="btn btn-success" href="/user/{{ user.email }}">Dışarıdan Bak</a>
 
-        <hr>
+            <hr>
 
-        <strong>Katıldığı Gruplar: </strong>
-        {% for group in user.joined_groups %}
-        <li>
-            <a href="/group-detail/{{ group.id }}">{{ group.group_name }}</a>
-        </li>
-        {% endfor %}
-        <hr>
-        <strong>Katıldığı Turlar: </strong>
-        {% for tour in user.joined_tours %}
-        <li>
-            <a href="/tour-detail/{{ tour.id }}">{{ tour.tour_name }}</a>
-        </li>
-        {% endfor %}
+            <strong>Katıldığı Gruplar: </strong>
+            {% for group in user.joined_groups %}
+                <li>
+                    <a href="/group-detail/{{ group.id }}">{{ group.group_name }}</a>
+                </li>
+            {% endfor %}
+            <hr>
+            <strong>Katıldığı Turlar: </strong>
+            {% for tour in user.joined_tours %}
+                <li>
+                    <a href="/tour-detail/{{ tour.id }}">{{ tour.tour_name }}</a>
+                </li>
+            {% endfor %}
+        </div>
     </div>
-</div>
 
 {% endblock body %}
