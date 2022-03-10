@@ -85,7 +85,7 @@ def tours():
 
 @app.route('/groups')
 def groups():
-    groups = db.find('groups', {})
+    groups = list(db.find('groups', {}))
     return render_template('groups.html', groups=groups)
 
 
@@ -287,7 +287,6 @@ def group_detail(id):
     group_details = db.find_one('groups', {
         '_id': ObjectId(id)
     })
-
     return render_template('group-detail.html', group_detail=group_details)
 
 
@@ -347,6 +346,29 @@ def join_group(id):
         return redirect(url_for('home'))
     else:
         flash('Zaten bu gruptasın!', 'warning')
+        return redirect(url_for('home'))
+
+
+@app.route('/leave-group/<id>', methods=['POST'])
+@login_required
+def leave_group(id):
+    group = db.find_one("groups", {'_id': ObjectId(id)})
+    user = db.find_one("users", {'email': session['email']})
+
+    if session['email'] in group['members']:
+        group['members'].remove(session['email'])
+
+        for index, joined_group in enumerate(user['joined_groups']):
+            if joined_group['id'] == ObjectId(id):
+                del user['joined_groups'][index]
+
+        db.find_and_modify("groups", query={"_id": ObjectId(id)}, members=group['members'])
+        db.find_and_modify('users', query={'email': session['email']}, joined_groups=user['joined_groups'])
+
+        flash('Gruptan ayrıldın!', 'success')
+        return redirect(url_for('home'))
+    else:
+        flash('Zaten bu grubun üyesi değilsin!', 'warning')
         return redirect(url_for('home'))
 
 

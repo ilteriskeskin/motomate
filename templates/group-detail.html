@@ -1,41 +1,50 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Group Details
+    Group Details
 {% endblock title %}
 
 {% block body %}
 
-{% if session['email'] in group_detail['admins'] %}
-<a class="btn btn-success" href="/edit-group/{{ group_detail['_id'] }}">Grup Bilgilerini Düzenle</a>
-{% endif %}
+    {% if session['email'] in group_detail['admins'] %}
+        <a class="btn btn-success" href="/edit-group/{{ group_detail['_id'] }}">Grup Bilgilerini Düzenle</a>
+    {% endif %}
 
-<br><br>
+    <br><br>
 
-<h2>Grup Detayları</h2>
-<hr>
+    <h2>Grup Detayları</h2>
+    <hr>
 
-<strong>Grup İsmi: </strong>{{ group_detail['group_name'] }}
-<br>
+    <strong>Grup İsmi: </strong>{{ group_detail['group_name'] }}
+    <br>
 
-<strong>Şehri: </strong>{{ group_detail['city'] }}
-<br>
-<strong>Açıklama</strong>{{ group_detail['note'] }}
-<hr>
+    <strong>Şehri: </strong>{{ group_detail['city'] }}
+    <br>
+    <strong>Açıklama: </strong>{{ group_detail['note'] }}
+    <hr>
 
-<br><br><br><br>
-<form action="/join-group/{{ group_detail['_id'] }}" method="POST">
-    <div class="text-center">
-        <input class="btn btn-primary" type="submit" value="Gruba Katıl">
-    </div>
-</form>
+    <br><br><br><br>
 
-<hr>
+    {% if session['email'] in group_detail['members'] %}
+        <form action="/leave-group/{{ group_detail['_id'] }}" method="POST">
+            <div class="text-center">
+                <input class="btn btn-danger" type="submit" value="Grubtan Ayrıl">
+            </div>
+        </form>
+    {% else %}
+        <form action="/join-group/{{ group_detail['_id'] }}" method="POST">
+            <div class="text-center">
+                <input class="btn btn-primary" type="submit" value="Gruba Katıl">
+            </div>
+        </form>
+    {% endif %}
 
-<h3>Katılımcılar</h3>
-{% for member in group_detail['members'] %}
-<li>
-    <a href="/user/{{ member }}">{{ member }}</a>
-</li>
-{% endfor %}
+    <hr>
+
+    <h3>Katılımcılar</h3>
+    {% for member in group_detail['members'] %}
+        <li>
+            <a href="/user/{{ member }}">{{ member }}</a>
+        </li>
+    {% endfor %}
 {% endblock body %}
