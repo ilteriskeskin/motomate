@@ -1,4 +1,4 @@
-# mototourmate
+# MotoMate
 Find your tour buddy
 
 

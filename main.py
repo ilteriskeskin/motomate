@@ -43,8 +43,8 @@ def login_required(f):
 
 @app.route('/')
 def home():
-    tours = db.find('tours', {'is_private': False}).limit(10)
-    groups = db.find('groups', {}).limit(10)
+    tours = db.find('tours', {'is_private': False}).limit(10).sort('_id', -1)
+    groups = db.find('groups', {}).limit(10).sort('_id', -1)
 
     tours_array = []
     group_array = []
@@ -66,12 +66,13 @@ def about():
 @app.route('/tours')
 def tours():
     tour_list = []
-    tours = db.find('tours', {})
+    tours = db.find('tours', {}).sort('_id', -1)
 
     for tour in tours:
         if tour.get('is_private'):
             if session.get('email'):
-                groups = db.find('groups', query={'admins': {'$in': [tour['email']]}})
+                groups = db.find('groups', query={
+                                 'admins': {'$in': [tour['email']]}}).sort('_id', -1)
 
                 for group in groups:
                     if session['email'] in group['members']:
@@ -85,7 +86,7 @@ def tours():
 
 @app.route('/groups')
 def groups():
-    groups = list(db.find('groups', {}))
+    groups = list(db.find('groups', {}).sort('_id', -1))
     return render_template('groups.html', groups=groups)
 
 
@@ -307,7 +308,7 @@ def create_group():
         user = db.find_one("users", {'email': session['email']})
         if user.get('joined_groups'):
             user['joined_groups'].append(
-                {"id": ObjectId(group_id), "group_name": form.group_name.data, })
+                {"id": ObjectId(group_id), "group_name": form.group_name.data})
         else:
             user['joined_groups'] = [{
                 "id": ObjectId(group_id),
@@ -335,7 +336,8 @@ def join_group(id):
             user['joined_groups'].append(
                 {"id": ObjectId(id), "group_name": group['group_name']})
         except:
-            user['joined_groups'] = [{"id": ObjectId(id), "group_name": group['group_name']}]
+            user['joined_groups'] = [
+                {"id": ObjectId(id), "group_name": group['group_name']}]
 
         db.find_and_modify("groups", query={"_id": ObjectId(
             id)}, members=group['members'])
@@ -362,8 +364,10 @@ def leave_group(id):
             if joined_group['id'] == ObjectId(id):
                 del user['joined_groups'][index]
 
-        db.find_and_modify("groups", query={"_id": ObjectId(id)}, members=group['members'])
-        db.find_and_modify('users', query={'email': session['email']}, joined_groups=user['joined_groups'])
+        db.find_and_modify(
+            "groups", query={"_id": ObjectId(id)}, members=group['members'])
+        db.find_and_modify('users', query={
+                           'email': session['email']}, joined_groups=user['joined_groups'])
 
         flash('Gruptan ayrıldın!', 'success')
         return redirect(url_for('home'))
